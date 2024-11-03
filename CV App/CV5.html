@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Page with Taskbars</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        /* Task bars at the top and bottom */
+        .top-bar, .bottom-bar {
+            background-color: white;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center; /* Center align items */
+            align-items: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+        }
+        .top-bar {
+            top: 0;
+            justify-content: space-between; /* Symmetrical spacing for top bar */
+            position: relative;
+        }
+
+        .bottom-bar {
+            bottom: 0;
+            justify-content: space-around; /* Ensure symmetrical spacing for bottom bar */
+        }
+
+        /* Center the middle icon in the top bar */
+        .middle-icon {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Position the side icons in the top bar symmetrically */
+        .top-bar img:first-child {
+            position: absolute;
+            left: 20px;
+        }
+
+        .top-bar img:last-child {
+            position: absolute;
+            right: 20px;
+        }
+
+        .top-bar img, .bottom-bar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* Styling for the middle icon */
+        .middle-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
+
+        .middle-icon img {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Main scrollable content */
+        .content {
+            margin-top: 70px; /* Height to clear top task bar */
+            margin-bottom: 70px; /* Height to clear bottom task bar */
+            padding: 0 20px;
+            overflow-y: scroll;
+            flex-grow: 1;
+        }
+
+        .candidate {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .candidate img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
+        .stars {
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .stars .star {
+            color: gold;
+            font-size: 18px;
+        }
+        .stars .empty-star {
+            color: lightgray;
+            font-size: 18px;
+        }
+        .thumbs-down {
+            font-size: 16px;
+            color: red;
+        }
+        /* Bottom icons */
+        .bottom-bar img {
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Taskbar -->
+    <div class="top-bar">
+        <img src="img/soldier.jpg">
+        <div class="middle-icon">
+            <img src="img/cross3.jpg">
+        </div>
+        <img src="img/calendar.png">
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="content">
+        <!-- Candidate 1 -->
+        <div class="candidate">
+            <img src="img/Trump.jpg" alt="">
+            <div class="stars">
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+            </div>
+            <ul>
+                <li>Candidate Statement: Make America Great Again</li>
+                <li>Moderator's note: Supported the J6 insurrection <span class="thumbs-down">👎</span></li>
+                <li>Pledged for Christian Education</li>
+                <li>Pledged for border security</li>
+                <li>Pledged for currency (CBDC)</li>
+            </ul>
+        </div>
+
+        <!-- Candidate 2 -->
+        <div class="candidate">
+            <img src="img/Kamala.jpg" alt="">
+            <div class="stars">
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="empty-star">★</span>
+            </div>
+            <ul>
+                <li>Candidate Statement: Lee Company - all you need</li>
+                <li>Moderator's note: Supported mail-in ballots and Covid shot mandates <span class="thumbs-down">👎</span></li>
+                <li>Pledged for Christian Education</li>
+                <li>Pledged for border security</li>
+                <li>Pledged for currency (CBDC)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bottom Taskbar -->
+    <div class="bottom-bar">
+        <img src="img/search.png" alt="Search">
+        <img src="img/home.png" alt="Home">
+        <img src="img/news.png" alt="News">
+        <img src="img/bell.png" alt="Notifications">
+        <img src="img/message.png" alt="Direct Message">
+    </div>
+
+</body>
+</html>

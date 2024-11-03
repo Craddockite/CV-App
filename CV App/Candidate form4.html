@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Political Candidate Multi-Step Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      width: 400px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .buttons button {
+      padding: 8px 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <form id="multiStepForm">
+      <!-- Step 1: Office Level Selection -->
+      <div class="step active">
+        <h3>Step 1: Select Office Level</h3>
+        <label for="officeLevel">Select Office Level:</label>
+        <select id="officeLevel" name="officeLevel" onchange="showOfficeOptions()" required>
+          <option value="">--Select Office Level--</option>
+          <option value="Federal">Federal Office</option>
+          <option value="State">State Office</option>
+          <option value="County">County Office</option>
+          <option value="City">City Office</option>
+        </select>
+
+
+
+<label for="party">Select Party Affiliation:</label>
+        <select id="party" name="party" required>
+          <option value="">--Select Party--</option>
+          <option value="Democrat">Democrat</option>
+          <option value="Republican">Republican</option>
+          <option value="Independent">Independent</option>
+          <option value="Other">Other</option>
+        </select>
+
+
+
+      </div>
+      
+      <!-- Step 2: Office Selection -->
+      <div class="step">
+        <h3>Step 2: Select Office</h3>
+        <label for="office">Select Office:</label>
+        <select id="office" name="office" onchange="showStateAndLocalOptions()" required>
+          <option value="">--Select Office--</option>
+        </select>
+
+        <!-- State Dropdown (for Federal, State, County, or City Offices as needed) -->
+        <div id="stateDiv" style="display: none;">
+          <label for="state">Select State:</label>
+          <select id="state" name="state" onchange="populateCountiesOrCities()" required>
+            <option value="">--Select State--</option>
+            <option value="TN">Tennessee</option>
+            <option value="KY">Kentucky</option>
+            <option value="GA">Georgia</option>
+            <option value="AL">Alabama</option>
+          </select>
+        </div>
+
+        <!-- County Dropdown (for County Offices) -->
+        <div id="countyDiv" style="display: none;">
+          <label for="county">Select County:</label>
+          <select id="county" name="county" required>
+            <option value="">--Select County--</option>
+          </select>
+        </div>
+
+        <!-- City Dropdown (for City Offices) -->
+        <div id="cityDiv" style="display: none;">
+          <label for="city">Select City:</label>
+          <select id="city" name="city" required>
+            <option value="">--Select City--</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="buttons">
+        <button type="button" id="prevBtn" onclick="nextStep(-1)">Previous</button>
+        <button type="button" id="nextBtn" onclick="nextStep(1)">Next</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    showStep(currentStep);
+
+    function showStep(step) {
+      const steps = document.getElementsByClassName("step");
+      steps[step].classList.add("active");
+      if (step === 0) {
+        document.getElementById("prevBtn").style.display = "none";
+      } else {
+        document.getElementById("prevBtn").style.display = "inline";
+      }
+      if (step === steps.length - 1) {
+        document.getElementById("nextBtn").innerHTML = "Submit";
+      } else {
+        document.getElementById("nextBtn").innerHTML = "Next";
+      }
+    }
+
+    function nextStep(n) {
+      const steps = document.getElementsByClassName("step");
+      if (n === 1 && !validateForm()) return false;
+      steps[currentStep].classList.remove("active");
+      currentStep += n;
+      if (currentStep >= steps.length) {
+        document.getElementById("multiStepForm").submit();
+        return false;
+      }
+      showStep(currentStep);
+    }
+
+    function validateForm() {
+      const steps = document.getElementsByClassName("step");
+      const inputs = steps[currentStep].getElementsByTagName("select");
+      for (let input of inputs) {
+        if (input.value === "") {
+          alert("Please fill out this field.");
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function showOfficeOptions() {
+      const officeLevel = document.getElementById("officeLevel").value;
+      const officeSelect = document.getElementById("office");
+      officeSelect.innerHTML = '<option value="">--Select Office--</option>';
+
+      const offices = {
+        "Federal": ["President", "Senator", "Congressman"],
+        "State": ["Governor", "State Senate"],
+        "County": ["School Board Member", "Sheriff"],
+        "City": ["Mayor", "Sheriff", "School Board Member"]
+      };
+
+      if (offices[officeLevel]) {
+        offices[officeLevel].forEach(office => {
+          const option = document.createElement("option");
+          option.value = office;
+          option.text = office;
+          officeSelect.add(option);
+        });
+      }
+
+      // Show the state dropdown for State, County, and City levels
+      document.getElementById("stateDiv").style.display = (officeLevel === "Federal" || officeLevel === "State" || officeLevel === "County" || officeLevel === "City") ? "block" : "none";
+      document.getElementById("countyDiv").style.display = "none"; // Hide county dropdown initially
+      document.getElementById("cityDiv").style.display = "none"; // Hide city dropdown initially
+    }
+
+    function showStateAndLocalOptions() {
+      const office = document.getElementById("office").value;
+      const officeLevel = document.getElementById("officeLevel").value;
+
+      // Show state dropdown if Federal Office is Senator or Congressman
+      document.getElementById("stateDiv").style.display = (officeLevel === "Federal" && (office === "Senator" || office === "Congressman")) || officeLevel === "State" || officeLevel === "County" || officeLevel === "City" ? "block" : "none";
+      
+      // Show county dropdown for County Offices and city dropdown for City Offices
+      document.getElementById("countyDiv").style.display = (officeLevel === "County") ? "block" : "none";
+      document.getElementById("cityDiv").style.display = (officeLevel === "City") ? "block" : "none";
+    }
+
+    function populateCountiesOrCities() {
+      const state = document.getElementById("state").value;
+      const countySelect = document.getElementById("county");
+      const citySelect = document.getElementById("city");
+
+      const counties = {
+        "TN": ["Davidson", "Shelby", "Knox", "Hamilton"],
+        "KY": ["Jefferson", "Fayette", "Boone", "Warren"],
+        "GA": ["Fulton", "Cobb", "Dekalb", "Gwinnett"],
+        "AL": ["Jefferson", "Mobile", "Madison", "Montgomery"]
+      };
+
+      const cities = {
+        "TN": ["Nashville", "Memphis", "Knoxville", "Chattanooga"],
+        "KY": ["Louisville", "Lexington", "Bowling Green", "Owensboro"],
+        "GA": ["Atlanta", "Savannah", "Augusta", "Macon"],
+        "AL": ["Birmingham", "Mobile", "Huntsville", "Montgomery"]
+      };
+
+      countySelect.innerHTML = '<option value="">--Select County--</option>';
+      citySelect.innerHTML = '<option value="">--Select City--</option>';
+
+      if (counties[state]) {
+        counties[state].forEach(county => {
+          const option = document.createElement("option");
+          option.value = county;
+          option.text = county;
+          countySelect.add(option);
+        });
+      }
+
+      if (cities[state]) {
+        cities[state].forEach(city => {
+          const option = document.createElement("option");
+          option.value = city;
+          option.text = city;
+          citySelect.add(option);
+        });
+      }
+    }
+  </script>
+</body>
+</html>
